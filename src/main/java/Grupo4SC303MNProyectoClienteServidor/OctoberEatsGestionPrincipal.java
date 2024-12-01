@@ -5,39 +5,62 @@ import java.util.Scanner;
 
 public class OctoberEatsGestionPrincipal {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+
         UsuariosOperaciones usuariosOperaciones = new UsuariosOperaciones();
         RestauranteBD restaurantesOperaciones = new RestauranteBD();
         MenuOperaciones menuOperaciones = new MenuOperaciones(); // Agrega una instancia de MenuOperaciones
 
-        while (true) {
-            mostrarMenuPrincipal();
-            int opcion = Integer.parseInt(scanner.nextLine());
+        Scanner s = new Scanner(System.in);
+        while (true){
+            System.out.println("¿Desea ingresar como cliente o administrador? (1/2)");
+            int opcion = s.nextInt();
+            if(opcion == 1){
+                mostrarMenuPrincipalCliente();
 
-            switch (opcion) {
-                case 1:
-                    registrarUsuario(scanner, usuariosOperaciones);
-                    break;
-                case 2:
-                    autenticarUsuario(scanner, usuariosOperaciones);
-                    break;
-                case 3:
-                    listarRestaurantes(restaurantesOperaciones);
-                    break;
-                case 4:
-                    listarMenu(scanner, menuOperaciones); // Cambia a usar MenuOperaciones
-                    break;
-                case 0:
-                    System.out.println("Saliendo del sistema. ¡Hasta luego!");
-                    scanner.close();
-                    return;
-                default:
-                    System.out.println("Opción no válida. Intente de nuevo.");
+                Scanner scanner = new Scanner(System.in);
+                while (true) {
+                    switch (opcion) {
+                        case 1:
+                            registrarUsuario(scanner, usuariosOperaciones);
+                            break;
+                        case 2:
+                            autenticarUsuario(scanner, usuariosOperaciones);
+                            break;
+                        case 3:
+                            listarRestaurantes(restaurantesOperaciones);
+                            break;
+                        case 4:
+                            listarMenu(scanner, menuOperaciones); // Cambia a usar MenuOperaciones
+                            break;
+                        case 0:
+                            System.out.println("Saliendo del sistema. ¡Hasta luego!");
+                            scanner.close();
+                            return;
+                        default:
+                            System.out.println("Opción no válida. Intente de nuevo.");
+                    }
+                }
+            } else if (opcion == 2){
+                mostrarMenuPrincipalAdministrador();
+            } else {
+                System.out.println("Opción no válida. Intente de nuevo.");
             }
         }
+
     }
 
-    private static void mostrarMenuPrincipal() {
+
+    private static void mostrarMenuPrincipalAdministrador(){
+        System.out.println("\n===== Menú Principal =====");
+        System.out.println("1. Selecionar su Restaurante");
+        System.out.println("2. Autenticar Usuario Como administrador");
+        System.out.println("3. Listar Pedidos pendientes de despachar");
+        System.out.println("4. Modificar Menu Menu del restaurante");
+        System.out.println("0. Salir");
+        System.out.print("Seleccione una opción: ");
+    }
+
+    private static void mostrarMenuPrincipalCliente() {
         System.out.println("\n===== Menú Principal =====");
         System.out.println("1. Registrar Usuario");
         System.out.println("2. Autenticar Usuario");
