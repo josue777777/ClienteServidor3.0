@@ -42,6 +42,29 @@ public class OctoberEatsGestionPrincipal {
                 }
             } else if (opcion == 2){
                 mostrarMenuPrincipalAdministrador();
+                Scanner scanner = new Scanner(System.in);
+                while (true) {
+                    switch (opcion) {
+                        case 1:
+                            //seleccionarRestaurante(scanner, restaurantesOperaciones);
+                            break;
+                        case 2:
+                           // autenticarAdministrador(scanner, usuariosOperaciones);
+                            break;
+                        case 3:
+                            //listarPedidosPendientes(pedidos);
+                            break;
+                        case 4:
+                            //modificarMenu(scanner, menuOperaciones); // Cambia a usar MenuOperaciones
+                            break;
+                        case 0:
+                            System.out.println("Saliendo del sistema. ��Hasta luego!");
+                            scanner.close();
+                            return;
+                        default:
+                            System.out.println("Opción no válida. Intente de nuevo.");
+                    }
+                }
             } else {
                 System.out.println("Opción no válida. Intente de nuevo.");
             }
@@ -52,7 +75,7 @@ public class OctoberEatsGestionPrincipal {
 
     private static void mostrarMenuPrincipalAdministrador(){
         System.out.println("\n===== Menú Principal =====");
-        System.out.println("1. Selecionar su Restaurante");
+        System.out.println("1. Registrar Su Restaurante");
         System.out.println("2. Autenticar Usuario Como administrador");
         System.out.println("3. Listar Pedidos pendientes de despachar");
         System.out.println("4. Modificar Menu Menu del restaurante");
@@ -127,4 +150,3 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 }
-//js

@@ -28,89 +28,12 @@ public class Restaurante {
         return "";
     }
 
-    public static boolean registrarPedidos(int clienteID, int restauranteID, String estado) {
-        // Implementación del metodo de registrar pedidos
-        String query = "INSERT INTO Pedidos (ClienteID, RestauranteID, Estado) VALUES (?, ?, ?)";
-        try (Connection conexion = db.setConexion()) {
-            PreparedStatement statement = conexion.prepareStatement(query);
-            statement.setInt(1, clienteID);
-            statement.setInt(2, restauranteID);
-            statement.setString(3, estado);
-            return statement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al registrar el pedido: " + e.getMessage());
-            return false;
-        }
-    }
 
-    public static String consultarPedido(int pedidoID) {
-        // Implementación del metododo de consultar pedidos
-        String query = "SELECT * FROM Pedidos WHERE ID = ?";
-        try (Connection conexion = db.setConexion()) {
-            PreparedStatement statement = conexion.prepareStatement(query);
-            statement.setInt(1, pedidoID);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return "ID: " + resultSet.getInt("ID") +
-                        ", ClienteID: " + resultSet.getInt("ClienteID") +
-                        ", RestauranteID: " + resultSet.getInt("RestauranteID") +
-                        ", Fecha: " + resultSet.getTimestamp("Fecha") +
-                        ", Estado: " + resultSet.getString("Estado");
-            } else {
-                return "No se encontró el pedido con ID: " + pedidoID;
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al consultar el pedido: " + e.getMessage());
-            return null;
-        }
-    }
-
-    public static List<String> listarPedidos() {
-        List<String> pedidos = new ArrayList<>();
-        String query = "SELECT * FROM Pedidos";
-        try (Connection conexion = db.setConexion()) {
-            PreparedStatement statement = conexion.prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                pedidos.add("ID: " + resultSet.getInt("ID") +
-                        ", ClienteID: " + resultSet.getInt("ClienteID") +
-                        ", RestauranteID: " + resultSet.getInt("RestauranteID") +
-                        ", Fecha: " + resultSet.getTimestamp("Fecha") +
-                        ", Estado: " + resultSet.getString("Estado"));
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al listar los pedidos: " + e.getMessage());
-        }
-        return pedidos;
-    }
-
-    public static boolean eliminarPedido(int pedidoID) {
-        // Implementación del metodo de eliminar pedidos ( nuevo metodo aparte de los que tenemos en el uml)
-        String query = "DELETE FROM Pedidos WHERE ID = ?";
-        try (Connection conexion = db.setConexion()) {
-            PreparedStatement statement = conexion.prepareStatement(query);
-            statement.setInt(1, pedidoID);
-            return statement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al eliminar el pedido: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public static boolean actualizarPedido(int pedidoID, String nuevoEstado) {
-        // Implementación del metodo actualizar pedido (se cambia el nombre del metodo con respecto al que tenemos en el uml ,  es una palabra mas acertada)
-        String query = "UPDATE Pedidos SET Estado = ? WHERE ID = ?";
-        try (Connection conexion = db.setConexion()) {
-            PreparedStatement statement = conexion.prepareStatement(query);
-            statement.setString(1, nuevoEstado);
-            statement.setInt(2, pedidoID);
-            return statement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al actualizar el pedido: " + e.getMessage());
-            return false;
-        }
-    }
 }
+
+
+
+
 class Pedidos{
     private final DataBase db;
 
@@ -118,7 +41,7 @@ class Pedidos{
         db = DataBase.getInstance();
     }
 
-    public static boolean registrarPedidos(int clienteID, int restauranteID, String estado) {
+    public  boolean registrarPedidos(int clienteID, int restauranteID, String estado) {
         // Implementación del metodo de registrar pedidos
         String query = "INSERT INTO Pedidos (ClienteID, RestauranteID, Estado) VALUES (?, ?, ?)";
         try (Connection conexion = db.setConexion()) {
@@ -133,7 +56,7 @@ class Pedidos{
         }
     }
 
-    public static String consultarPedido(int pedidoID) {
+    public String consultarPedido(int pedidoID) {
         // Implementación del metododo de consultar pedidos
         String query = "SELECT * FROM Pedidos WHERE ID = ?";
         try (Connection conexion = db.setConexion()) {
@@ -155,7 +78,7 @@ class Pedidos{
         }
     }
 
-    public static List<String> listarPedidos() {
+    public  List<String> listarPedidos() {
         List<String> pedidos = new ArrayList<>();
         String query = "SELECT * FROM Pedidos";
         try (Connection conexion = db.setConexion()) {
@@ -174,7 +97,7 @@ class Pedidos{
         return pedidos;
     }
 
-    public static boolean eliminarPedido(int pedidoID) {
+    public  boolean eliminarPedido(int pedidoID) {
         // Implementación del metodo de eliminar pedidos ( nuevo metodo aparte de los que tenemos en el uml)
         String query = "DELETE FROM Pedidos WHERE ID = ?";
         try (Connection conexion = db.setConexion()) {
@@ -187,7 +110,7 @@ class Pedidos{
         }
     }
 
-    public static boolean actualizarPedido(int pedidoID, String nuevoEstado) {
+    public  boolean actualizarPedido(int pedidoID, String nuevoEstado) {
         // Implementación del metodo actualizar pedido (se cambia el nombre del metodo con respecto al que tenemos en el uml ,  es una palabra mas acertada)
         String query = "UPDATE Pedidos SET Estado = ? WHERE ID = ?";
         try (Connection conexion = db.setConexion()) {
@@ -201,6 +124,15 @@ class Pedidos{
         }
     }
 }
+
+
+
+
+
+
+
+
+
 // Clase para operaciones relacionadas con restaurantes
 class RestauranteBD {
     private final DataBase db;
