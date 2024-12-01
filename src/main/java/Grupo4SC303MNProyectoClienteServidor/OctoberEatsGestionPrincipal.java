@@ -9,7 +9,7 @@ public class OctoberEatsGestionPrincipal {
         UsuariosOperaciones usuariosOperaciones = new UsuariosOperaciones();
         RestauranteBD restaurantesOperaciones = new RestauranteBD();
         MenuOperaciones menuOperaciones = new MenuOperaciones(); // Agrega una instancia de MenuOperaciones
-
+        Pedidos pedidos = new Pedidos();
         Scanner s = new Scanner(System.in);
         while (true){
             System.out.println("¿Desea ingresar como cliente o administrador? (1/2)");
@@ -66,6 +66,17 @@ public class OctoberEatsGestionPrincipal {
         System.out.println("2. Autenticar Usuario");
         System.out.println("3. Listar Restaurantes");
         System.out.println("4. Listar Menú");
+        System.out.println("0. Salir");
+        System.out.print("Seleccione una opción: ");
+    }
+
+    private static void mostrarMenuPedidos(){
+        System.out.println("\n===== Menú Principal =====");
+        System.out.println("1. Registrar Pedidos");
+        System.out.println("2. Consultar Pedidos");
+        System.out.println("3. Listar Pedidos");
+        System.out.println("4. Eliminar pedido");
+        System.out.println("4. Actualizar pedido");
         System.out.println("0. Salir");
         System.out.print("Seleccione una opción: ");
     }
