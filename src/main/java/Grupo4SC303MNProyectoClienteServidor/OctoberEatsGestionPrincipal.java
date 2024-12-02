@@ -52,7 +52,7 @@ public class OctoberEatsGestionPrincipal {
                            // autenticarAdministrador(scanner, usuariosOperaciones);
                             break;
                         case 3:
-                            //listarPedidosPendientes(pedidos);
+                            listarPedidos(pedidos);
                             break;
                         case 4:
                             //modificarMenu(scanner, menuOperaciones); // Cambia a usar MenuOperaciones
@@ -148,5 +148,72 @@ public class OctoberEatsGestionPrincipal {
         for (String item : menu) {
             System.out.println(item);
         }
+    }
+
+    private static void registrarPedido(Scanner scanner, Pedidos pedidos) {
+        System.out.print("Ingrese el ID del cliente: ");
+        int clienteID = scanner.nextInt();
+        System.out.print("Ingrese el ID del restaurante: ");
+        int restauranteID = scanner.nextInt();
+        scanner.nextLine(); // Consumir nueva línea
+        System.out.print("Ingrese el estado del pedido: ");
+        String estado = scanner.nextLine();
+
+        if (pedidos.registrarPedidos(clienteID, restauranteID, estado)) {
+            System.out.println("Pedido registrado con éxito.");
+        } else {
+            System.out.println("Error al registrar el pedido.");
+        }
+    }
+
+    private static void consultarPedido(Scanner scanner, Pedidos pedidos) {
+        System.out.print("Ingrese el ID del pedido: ");
+        int pedidoID = scanner.nextInt();
+
+        String resultado = pedidos.consultarPedido(pedidoID);
+        if (resultado != null) {
+            System.out.println("Detalles del pedido:");
+            System.out.println(resultado);
+        } else {
+            System.out.println("No se encontró el pedido.");
+        }
+    }
+
+    private static void listarPedidos(Pedidos pedidos) {
+        List<String> pedidosList = pedidos.listarPedidos();
+        System.out.println("\n===== Listado de Pedidos =====");
+        if (pedidosList.isEmpty()) {
+            System.out.println("No hay pedidos registrados.");
+        } else {
+            for (String pedido : pedidosList) {
+                System.out.println(pedido);
+            }
+        }
+    }
+
+    private static void eliminarPedido(Scanner scanner, Pedidos pedidos) {
+        System.out.print("Ingrese el ID del pedido a eliminar: ");
+        int pedidoID = scanner.nextInt();
+
+        if (pedidos.eliminarPedido(pedidoID)) {
+            System.out.println("Pedido eliminado con éxito.");
+        } else {
+            System.out.println("Error al eliminar el pedido.");
+        }
+    }
+
+    private static void actualizarPedido(Scanner scanner, Pedidos pedidos) {
+        System.out.print("Ingrese el ID del pedido a actualizar: ");
+        int pedidoID = scanner.nextInt();
+        scanner.nextLine(); // Consumir nueva línea
+        System.out.print("Ingrese el nuevo estado del pedido: ");
+        String nuevoEstado = scanner.nextLine();
+
+        if (pedidos.actualizarPedido(pedidoID, nuevoEstado)) {
+            System.out.println("Pedido actualizado con éxito.");
+        } else {
+            System.out.println("Error al actualizar el pedido.");
+        }
+
     }
 }
