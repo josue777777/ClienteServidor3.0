@@ -14,12 +14,19 @@ public class OctoberEatsGestionPrincipal {
         while (true){
             System.out.println("¿Desea ingresar como cliente o administrador? (1/2)");
             int opcion = s.nextInt();
+
+            if (opcion == 0) {
+                System.out.println("Saliendo del sistema. ¡Hasta luego!");
+                break;
+            }
+
             if(opcion == 1){
                 mostrarMenuPrincipalCliente();
 
                 Scanner scanner = new Scanner(System.in);
                 while (true) {
-                    switch (opcion) {
+                    int subOpcion = scanner.nextInt();
+                    switch (subOpcion) {
                         case 1:
                             registrarUsuario(scanner, usuariosOperaciones);
                             break;
@@ -30,7 +37,7 @@ public class OctoberEatsGestionPrincipal {
                             listarRestaurantes(restaurantesOperaciones);
                             break;
                         case 4:
-                            listarMenu(scanner, menuOperaciones); // Cambia a usar MenuOperaciones
+                            listarMenu(scanner, menuOperaciones);
                             break;
                         case 0:
                             System.out.println("Saliendo del sistema. ¡Hasta luego!");
@@ -107,6 +114,11 @@ public class OctoberEatsGestionPrincipal {
     private static void registrarUsuario(Scanner scanner, UsuariosOperaciones usuariosOperaciones) {
         System.out.print("Ingrese el nombre de usuario: ");
         String nombreUsuario = scanner.nextLine();
+
+        if (nombreUsuario.equalsIgnoreCase("salir")) {
+            System.out.println("Regresando al menú principal...");
+            return;
+        }
         System.out.print("Ingrese la contraseña: ");
         String contrasena = scanner.nextLine();
 
@@ -120,6 +132,8 @@ public class OctoberEatsGestionPrincipal {
     private static void autenticarUsuario(Scanner scanner, UsuariosOperaciones usuariosOperaciones) {
         System.out.print("Ingrese el nombre de usuario: ");
         String nombreUsuario = scanner.nextLine();
+
+
         System.out.print("Ingrese la contraseña: ");
         String contrasena = scanner.nextLine();
 
@@ -140,6 +154,7 @@ public class OctoberEatsGestionPrincipal {
     }
 
     private static void listarMenu(Scanner scanner, MenuOperaciones menuOperaciones) { // Cambia el parámetro a MenuOperaciones
+        scanner.nextLine();
         System.out.print("Ingrese el nombre del restaurante para listar su menú: ");
         String nombreRestaurante = scanner.nextLine();
         List<String> menu = menuOperaciones.listarMenu(); // metodo menu de opciones
