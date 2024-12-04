@@ -27,6 +27,52 @@ public class DataBase {
     public Connection setConexion() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
+
+    public String obtenerNombreCliente(int clienteID) {
+        String query = "SELECT Nombre FROM Clientes WHERE ID = ?";
+        try (Connection conexion = setConexion();
+             PreparedStatement stmt = conexion.prepareStatement(query)) {
+            stmt.setInt(1, clienteID);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("Nombre");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener el nombre del cliente: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public String obtenerNombreRestaurante(int restauranteID) {
+        String query = "SELECT Nombre FROM Restaurantes WHERE ID = ?";
+        try (Connection conexion = setConexion();
+             PreparedStatement stmt = conexion.prepareStatement(query)) {
+            stmt.setInt(1, restauranteID);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("Nombre");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener el nombre del restaurante: " + e.getMessage());
+        }
+        return null;
+    }
+
+//    public boolean registrarDetallePedido(int pedidoID, int menuID, int cantidad, double subtotal) {
+//        String query = "INSERT INTO DetallePedido (PedidoID, MenuID, Cantidad, Subtotal) VALUES (?, ?, ?, ?)";
+//        try (Connection conexion = db.setConexion();
+//             PreparedStatement stmt = conexion.prepareStatement(query)) {
+//            stmt.setInt(1, pedidoID);
+//            stmt.setInt(2, menuID);
+//            stmt.setInt(3, cantidad);
+//            stmt.setDouble(4, subtotal);
+//            return stmt.executeUpdate() > 0;
+//        } catch (SQLException e) {
+//            System.err.println("Error al registrar el detalle del pedido: " + e.getMessage());
+//            return false;
+//        }
+//    }
+
 }
 
 

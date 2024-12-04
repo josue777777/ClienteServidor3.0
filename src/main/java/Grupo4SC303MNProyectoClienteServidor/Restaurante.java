@@ -41,14 +41,13 @@ class Pedidos{
         db = DataBase.getInstance();
     }
 
-    public  boolean registrarPedidos(int clienteID, int restauranteID, String estado) {
+    public  boolean registrarPedidos(int clienteID, int restauranteID) {
         // Implementación del metodo de registrar pedidos
-        String query = "INSERT INTO Pedidos (ClienteID, RestauranteID, Estado) VALUES (?, ?, ?)";
+        String query = "INSERT INTO Pedidos (ClienteID, RestauranteID) VALUES (?, ?)";
         try (Connection conexion = db.setConexion()) {
             PreparedStatement statement = conexion.prepareStatement(query);
             statement.setInt(1, clienteID);
             statement.setInt(2, restauranteID);
-            statement.setString(3, estado);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error al registrar el pedido: " + e.getMessage());

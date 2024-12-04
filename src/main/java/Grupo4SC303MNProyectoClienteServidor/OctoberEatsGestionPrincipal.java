@@ -11,76 +11,108 @@ public class OctoberEatsGestionPrincipal {
         MenuOperaciones menuOperaciones = new MenuOperaciones(); // Agrega una instancia de MenuOperaciones
         Pedidos pedidos = new Pedidos();
         Scanner s = new Scanner(System.in);
-        while (true){
-            System.out.println("¿Desea ingresar como cliente o administrador? (1/2)");
+
+        while (true) {
+            System.out.println("¿Desea ingresar como cliente o administrador? (1: Cliente / 2: Administrador / 0: Salir)");
             int opcion = s.nextInt();
+            s.nextLine();
 
             if (opcion == 0) {
                 System.out.println("Saliendo del sistema. ¡Hasta luego!");
                 break;
-            }
-
-            if(opcion == 1){
-                mostrarMenuPrincipalCliente();
-
-                Scanner scanner = new Scanner(System.in);
-                while (true) {
-                    int subOpcion = scanner.nextInt();
-                    switch (subOpcion) {
-                        case 1:
-                            registrarUsuario(scanner, usuariosOperaciones);
-                            break;
-                        case 2:
-                            autenticarUsuario(scanner, usuariosOperaciones);
-                            break;
-                        case 3:
-                            listarRestaurantes(restaurantesOperaciones);
-                            break;
-                        case 4:
-                            listarMenu(scanner, menuOperaciones);
-                            break;
-                        case 0:
-                            System.out.println("Saliendo del sistema. ¡Hasta luego!");
-                            scanner.close();
-                            return;
-                        default:
-                            System.out.println("Opción no válida. Intente de nuevo.");
-                    }
-                }
-            } else if (opcion == 2){
-                mostrarMenuPrincipalAdministrador();
-                Scanner scanner = new Scanner(System.in);
-                while (true) {
-                    switch (opcion) {
-                        case 1:
-                            //seleccionarRestaurante(scanner, restaurantesOperaciones);
-                            break;
-                        case 2:
-                           // autenticarAdministrador(scanner, usuariosOperaciones);
-                            break;
-                        case 3:
-                            listarPedidos(pedidos);
-                            break;
-                        case 4:
-                            //modificarMenu(scanner, menuOperaciones); // Cambia a usar MenuOperaciones
-                            break;
-                        case 0:
-                            System.out.println("Saliendo del sistema. ��Hasta luego!");
-                            scanner.close();
-                            return;
-                        default:
-                            System.out.println("Opción no válida. Intente de nuevo.");
-                    }
-                }
+            } else if (opcion == 1) {
+                manejarCliente(s, usuariosOperaciones, restaurantesOperaciones, menuOperaciones, pedidos);
+            } else if (opcion == 2) {
+                manejarAdministrador(s, restaurantesOperaciones, pedidos);
             } else {
                 System.out.println("Opción no válida. Intente de nuevo.");
             }
         }
+    }
 
+    private static void manejarCliente(Scanner scanner, UsuariosOperaciones usuariosOperaciones, RestauranteBD restaurantesOperaciones,
+                                       MenuOperaciones menuOperaciones, Pedidos pedidos) {
+        while (true) {
+            mostrarMenuPrincipalCliente();
+            int subOpcion = scanner.nextInt();
+
+            switch (subOpcion) {
+                case 1:
+                    registrarUsuario(scanner, usuariosOperaciones);
+                    break;
+                case 2:
+                    autenticarUsuario(scanner, usuariosOperaciones);
+                    break;
+                case 3:
+                    listarRestaurantes(restaurantesOperaciones);
+                    break;
+                case 4:
+                    listarMenu(scanner, menuOperaciones);
+                    break;
+                case 0:
+                    System.out.println("Volviendo al menú inicial...");
+                    return;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+
+            if (!deseaContinuarEnMenu(scanner)) {
+                System.out.println("Volviendo al menú inicial...");
+                return;
+            }
+        }
+    }
+
+    private static void manejarAdministrador(Scanner scanner, RestauranteBD restaurantesOperaciones, Pedidos pedidos) {
+        while (true) {
+            mostrarMenuPrincipalAdministrador();
+            int subOpcion = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (subOpcion) {
+                case 1:
+                    // Registrar restaurante
+                    break;
+                case 2:
+                    // Autenticar administrador
+                    break;
+                case 3:
+                    listarPedidos(pedidos);
+                    break;
+                case 4:
+                    // Modificar menú del restaurante
+                    break;
+                case 0:
+                    System.out.println("Volviendo al menú inicial...");
+                    return;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+
+            if (!deseaContinuarEnMenu(scanner)) {
+                System.out.println("Volviendo al menú inicial...");
+                return;
+            }
+        }
+    }
+
+    private static boolean deseaContinuarEnMenu(Scanner scanner) {
+        while (true) {
+            System.out.println("¿Deseas volver al menu? Sí/No (No: Si deseas salir por completo");
+            String respuesta = scanner.nextLine().trim().toLowerCase();
+
+            if (respuesta.equals("sí") || respuesta.equals("si")) {
+                return true;
+            } else if (respuesta.equals("no")) {
+                return false;
+            } else {
+                System.out.println("Respuesta no válida. Por favor, escriba 'Sí' o 'No'.");
+            }
+        }
     }
 
 
-    private static void mostrarMenuPrincipalAdministrador(){
+    private static void mostrarMenuPrincipalAdministrador() {
         System.out.println("\n===== Menú Principal =====");
         System.out.println("1. Registrar Su Restaurante");
         System.out.println("2. Autenticar Usuario Como administrador");
@@ -100,7 +132,7 @@ public class OctoberEatsGestionPrincipal {
         System.out.print("Seleccione una opción: ");
     }
 
-    private static void mostrarMenuPedidos(){
+    private static void mostrarMenuPedidos() {
         System.out.println("\n===== Menú Principal =====");
         System.out.println("1. Registrar Pedidos");
         System.out.println("2. Consultar Pedidos");
@@ -111,124 +143,186 @@ public class OctoberEatsGestionPrincipal {
         System.out.print("Seleccione una opción: ");
     }
 
+
     private static void registrarUsuario(Scanner scanner, UsuariosOperaciones usuariosOperaciones) {
-        System.out.print("Ingrese el nombre de usuario: ");
-        String nombreUsuario = scanner.nextLine();
-
-        if (nombreUsuario.equalsIgnoreCase("salir")) {
-            System.out.println("Regresando al menú principal...");
-            return;
-        }
-        System.out.print("Ingrese la contraseña: ");
-        String contrasena = scanner.nextLine();
-
-        if (usuariosOperaciones.registrarUsuario(nombreUsuario, contrasena)) {
-            System.out.println("Usuario registrado con éxito.");
-        } else {
-            System.out.println("Error al registrar el usuario.");
+        try {
+            System.out.print("Ingrese el nombre de usuario: ");
+            String nombreUsuario = scanner.nextLine();
+            if (nombreUsuario.equalsIgnoreCase("salir")) {
+                System.out.println("Regresando al menú principal...");
+                return;
+            }
+            scanner.nextLine();
+            System.out.print("Ingrese la contraseña: ");
+            String contrasena = scanner.nextLine();
+            if (usuariosOperaciones.registrarUsuario(nombreUsuario, contrasena)) {
+                System.out.println("Usuario registrado con éxito.");
+            } else {
+                System.out.println("Error al registrar el usuario.");
+            }
+        } catch (Exception e) {
+            System.err.println("Ocurrió un error al registrar el usuario: " + e.getMessage());
         }
     }
 
     private static void autenticarUsuario(Scanner scanner, UsuariosOperaciones usuariosOperaciones) {
-        System.out.print("Ingrese el nombre de usuario: ");
-        String nombreUsuario = scanner.nextLine();
-
-
-        System.out.print("Ingrese la contraseña: ");
-        String contrasena = scanner.nextLine();
-
-        if (usuariosOperaciones.autenticarUsuario(nombreUsuario, contrasena)) {
-            System.out.println("Autenticación exitosa. ¡Bienvenido!");
-        } else {
-            System.out.println("Error en la autenticación. Usuario o contraseña incorrectos.");
+        try {
+            System.out.print("Ingrese el nombre de usuario: ");
+            String nombreUsuario = scanner.nextLine();
+            scanner.nextLine();
+            System.out.print("Ingrese la contraseña: ");
+            String contrasena = scanner.nextLine();
+            if (usuariosOperaciones.autenticarUsuario(nombreUsuario, contrasena)) {
+                System.out.println("Autenticación exitosa. ¡Bienvenido!");
+            } else {
+                System.out.println("Error en la autenticación. Usuario o contraseña incorrectos.");
+            }
+        } catch (Exception e) {
+            System.err.println("Ocurrió un error al autenticar el usuario: " + e.getMessage());
         }
     }
 
     private static void listarRestaurantes(RestauranteBD restaurantesOperaciones) {
-        List<String> restaurantes = restaurantesOperaciones.listarRestaurantesBD();
+        try {
+            List<String> restaurantes = restaurantesOperaciones.listarRestaurantesBD();
 
-        System.out.println("\n===== Restaurantes Disponibles =====");
-        for (String restaurante : restaurantes) {
-            System.out.println(restaurante);
+            if (restaurantes.isEmpty()) {
+                System.out.println("\nNo hay restaurantes disponibles.");
+            } else {
+                System.out.println("\n===== Restaurantes Disponibles =====");
+                for (String restaurante : restaurantes) {
+                    System.out.println(restaurante);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Ocurrió un error al listar los restaurantes: " + e.getMessage());
         }
     }
 
     private static void listarMenu(Scanner scanner, MenuOperaciones menuOperaciones) { // Cambia el parámetro a MenuOperaciones
-        scanner.nextLine();
-        System.out.print("Ingrese el nombre del restaurante para listar su menú: ");
-        String nombreRestaurante = scanner.nextLine();
-        List<String> menu = menuOperaciones.listarMenu(); // metodo menu de opciones
+        try {
+            scanner.nextLine();
+            System.out.print("Ingrese el nombre del restaurante para listar su menú: ");
+            String nombreRestaurante = scanner.nextLine();
+            List<String> menu = menuOperaciones.listarMenu(); // metodo menu de opciones
 
-        System.out.println("\n===== Menú de " + nombreRestaurante + " =====");
-        for (String item : menu) {
-            System.out.println(item);
+            System.out.println("\n===== Menú de " + nombreRestaurante + " =====");
+            for (String item : menu) {
+                System.out.println(item);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Ocurrió un error al listar el menú: " + e.getMessage());
         }
+
     }
 
     private static void registrarPedido(Scanner scanner, Pedidos pedidos) {
-        System.out.print("Ingrese el ID del cliente: ");
-        int clienteID = scanner.nextInt();
-        System.out.print("Ingrese el ID del restaurante: ");
-        int restauranteID = scanner.nextInt();
-        scanner.nextLine(); // Consumir nueva línea
-        System.out.print("Ingrese el estado del pedido: ");
-        String estado = scanner.nextLine();
+        try {
+            DataBase db = DataBase.getInstance();
 
-        if (pedidos.registrarPedidos(clienteID, restauranteID, estado)) {
-            System.out.println("Pedido registrado con éxito.");
-        } else {
-            System.out.println("Error al registrar el pedido.");
+            System.out.print("Ingrese el ID del cliente: ");
+            int clienteID = scanner.nextInt();
+            System.out.print("Ingrese el ID del restaurante: ");
+            int restauranteID = scanner.nextInt();
+            scanner.nextLine(); // Limpia la entrada del Scanner
+
+            String nombreCliente = db.obtenerNombreCliente(clienteID);
+            String nombreRestaurante = db.obtenerNombreRestaurante(restauranteID);
+
+            if (nombreCliente == null) {
+                System.out.println("Error: Cliente no encontrado con ID " + clienteID);
+                return;
+            }
+            if (nombreRestaurante == null) {
+                System.out.println("Error: Restaurante no encontrado con ID " + restauranteID);
+                return;
+            }
+
+            System.out.println("Cliente: " + nombreCliente);
+            System.out.println("Restaurante: " + nombreRestaurante);
+
+            if (pedidos.registrarPedidos(clienteID, restauranteID)) {
+                System.out.println("Pedido registrado con éxito.");
+            } else {
+                System.out.println("Error al registrar el pedido.");
+            }
+        } catch (Exception e) {
+            System.err.println("Ocurrió un error al registrar el pedido: " + e.getMessage());
         }
     }
 
     private static void consultarPedido(Scanner scanner, Pedidos pedidos) {
-        System.out.print("Ingrese el ID del pedido: ");
-        int pedidoID = scanner.nextInt();
+        try {
+            System.out.print("Ingrese el ID del pedido: ");
+            int pedidoID = scanner.nextInt();
 
-        String resultado = pedidos.consultarPedido(pedidoID);
-        if (resultado != null) {
-            System.out.println("Detalles del pedido:");
-            System.out.println(resultado);
-        } else {
-            System.out.println("No se encontró el pedido.");
+            String resultado = pedidos.consultarPedido(pedidoID);
+            if (resultado != null) {
+                System.out.println("Detalles del pedido:");
+                System.out.println(resultado);
+            } else {
+                System.out.println("No se encontró el pedido.");
+            }
+
+        } catch (Exception e) {
+            System.err.println("Ocurrió un error al consultar el pedido: " + e.getMessage());
         }
+
     }
 
     private static void listarPedidos(Pedidos pedidos) {
-        List<String> pedidosList = pedidos.listarPedidos();
-        System.out.println("\n===== Listado de Pedidos =====");
-        if (pedidosList.isEmpty()) {
-            System.out.println("No hay pedidos registrados.");
-        } else {
-            for (String pedido : pedidosList) {
-                System.out.println(pedido);
+        try {
+            List<String> pedidosList = pedidos.listarPedidos();
+
+            if (pedidosList.isEmpty()) {
+                System.out.println("\nNo hay pedidos registrados.");
+            } else {
+                System.out.println("\n===== Listado de Pedidos =====");
+                for (String pedido : pedidosList) {
+                    System.out.println(pedido);
+                }
             }
+        } catch (Exception e) {
+            System.err.println("Ocurrió un error al listar los pedidos: " + e.getMessage());
         }
     }
 
     private static void eliminarPedido(Scanner scanner, Pedidos pedidos) {
-        System.out.print("Ingrese el ID del pedido a eliminar: ");
-        int pedidoID = scanner.nextInt();
+        try{
+            System.out.print("Ingrese el ID del pedido a eliminar: ");
+            int pedidoID = scanner.nextInt();
 
-        if (pedidos.eliminarPedido(pedidoID)) {
-            System.out.println("Pedido eliminado con éxito.");
-        } else {
-            System.out.println("Error al eliminar el pedido.");
+            if (pedidos.eliminarPedido(pedidoID)) {
+                System.out.println("Pedido eliminado con éxito.");
+            } else {
+                System.out.println("Error al eliminar el pedido.");
+            }
+
+        } catch (Exception e) {
+            System.err.println("Ocurrió un error al eliminar el pedido: " + e.getMessage());
+
         }
     }
 
     private static void actualizarPedido(Scanner scanner, Pedidos pedidos) {
-        System.out.print("Ingrese el ID del pedido a actualizar: ");
-        int pedidoID = scanner.nextInt();
-        scanner.nextLine(); // Consumir nueva línea
-        System.out.print("Ingrese el nuevo estado del pedido: ");
-        String nuevoEstado = scanner.nextLine();
+        try {
+            System.out.print("Ingrese el ID del pedido a actualizar: ");
+            int pedidoID = scanner.nextInt();
+            scanner.nextLine(); // Consumir nueva línea
+            System.out.print("Ingrese el nuevo estado del pedido: ");
+            String nuevoEstado = scanner.nextLine();
 
-        if (pedidos.actualizarPedido(pedidoID, nuevoEstado)) {
-            System.out.println("Pedido actualizado con éxito.");
-        } else {
-            System.out.println("Error al actualizar el pedido.");
+            if (pedidos.actualizarPedido(pedidoID, nuevoEstado)) {
+                System.out.println("Pedido actualizado con éxito.");
+            } else {
+                System.out.println("Error al actualizar el pedido.");
+            }
+
+        } catch (Exception e) {
+            System.err.println("Ocurrió un error al actualizar el pedido: " + e.getMessage());
         }
+
 
     }
 }
