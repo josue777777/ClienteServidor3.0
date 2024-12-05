@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class OctoberEatsServer {
 
@@ -30,6 +31,9 @@ public class OctoberEatsServer {
 class ManejoClientes implements Runnable {
 
     private Socket clientSocket;
+    private DataOutputStream out;
+    private DataInputStream in;
+
 
     public ManejoClientes(Socket socket) {
         this.clientSocket = socket;
@@ -79,25 +83,61 @@ class ManejoClientes implements Runnable {
         }
     }
 
-//    public class ManejoClientesBS {
-//        public void obtenerClientes() {
-//            String query = "SELECT * FROM clientes";
-//            try (Connection connection = Database.getConnection();
-//                 PreparedStatement pstmt = connection.prepareStatement(query);
-//                 ResultSet rs = pstmt.executeQuery()) {
+//    public void conectarAlServidor() {
+//        String host = "localhost";
+//        int port = 5432;
 //
-//                System.out.println("Lista de clientes:");
-//                while (rs.next()) {
-//                    System.out.println("Cliente: " + rs.getString("nombre"));
+//        try {
+//            // Usamos el socket como atributo de la clase en lugar de un socket local
+//            socket = new Socket(host, port);
+//            System.out.println("Conectado al servidor en " + host + ":" + port);
+//
+//            out = new DataOutputStream(socket.getOutputStream());
+//            in = new DataInputStream(socket.getInputStream());
+//
+//            Scanner s = new Scanner(System.in);
+//            while (true) {
+//                System.out.println("Bienvenido " + getNombre() + " a October Eats");
+//                System.out.println("Elija una categoría del menú:");
+//                System.out.println("1. Comida rápida");
+//                System.out.println("2. Platos Fuertes");
+//                System.out.println("3. Plato del día");
+//                System.out.println("4. Bebidas");
+//                System.out.println("5. Salir");
+//
+//                int opcion = s.nextInt();
+//                if (opcion == 5) {
+//                    System.out.println("Saliendo...");
+//                    break;
 //                }
-//            } catch (SQLException e) {
-//                System.err.println("Error al obtener clientes:");
-//                e.printStackTrace();
+//
+//                // Enviar la opción al servidor
+//                out.writeInt(opcion);
+//                out.flush();
+//
+//                // Leer la respuesta del servidor
+//                String respuestaServidor = in.readUTF();
+//                System.out.println("Respuesta del Servidor: " + respuestaServidor);
+//
+//                // Preguntar si quiere hacer más pedidos
+//                System.out.println("¿Desea continuar realizando más pedidos? (si / no)");
+//                String continuar = s.next();
+//                if (!continuar.equalsIgnoreCase("si")) {
+//                    break;
+//                }
+//            }
+//        } catch (IOException e) {
+//            System.err.println("Error al conectar al servidor: " + e.getMessage());
+//        } finally {
+//            // Asegurarse de cerrar lo que usamos
+//            try {
+//                if (in != null) in.close();
+//                if (out != null) out.close();
+//                if (socket != null) socket.close();
+//            } catch (IOException e) {
+//                System.err.println("Error al cerrar los recursos: " + e.getMessage());
 //            }
 //        }
-//
 //    }
 
-
-    // buenas noches
 }

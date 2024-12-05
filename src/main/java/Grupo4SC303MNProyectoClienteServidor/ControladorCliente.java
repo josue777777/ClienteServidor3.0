@@ -5,14 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Usuario {
+public class ControladorCliente {
     private String nombre;
     private String apellido;
     private String email;
     private String id;
 
 
-    public Usuario(String nombre, String apellido, String id, String email) {
+    public ControladorCliente(String nombre, String apellido, String id, String email) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.id = id;

@@ -1,6 +1,6 @@
 package Grupo4SC303MNProyectoClienteServidor;
 
-public class Repartidor extends Usuario {
+public class Repartidor extends ControladorCliente {
 
     private String codigoEmpleado;
 

@@ -39,6 +39,7 @@ public class OctoberEatsGestionPrincipal {
             switch (subOpcion) {
                 case 1:
                     registrarUsuario(scanner, usuariosOperaciones);
+
                     break;
                 case 2:
                     autenticarUsuario(scanner, usuariosOperaciones);
