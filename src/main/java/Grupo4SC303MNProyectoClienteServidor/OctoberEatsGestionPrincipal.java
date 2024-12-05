@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class OctoberEatsGestionPrincipal {
     public static void main(String[] args) {
 
-        UsuariosOperaciones usuariosOperaciones = new UsuariosOperaciones();
+        ControladorCliente controladorCliente = new ControladorCliente();
         RestauranteBD restaurantesOperaciones = new RestauranteBD();
         MenuOperaciones menuOperaciones = new MenuOperaciones(); // Agrega una instancia de MenuOperaciones
         Pedidos pedidos = new Pedidos();
@@ -21,7 +21,7 @@ public class OctoberEatsGestionPrincipal {
                 System.out.println("Saliendo del sistema. ¡Hasta luego!");
                 break;
             } else if (opcion == 1) {
-                manejarCliente(s, usuariosOperaciones, restaurantesOperaciones, menuOperaciones, pedidos);
+                manejarCliente(s, controladorCliente, restaurantesOperaciones, menuOperaciones, pedidos);
             } else if (opcion == 2) {
                 manejarAdministrador(s, restaurantesOperaciones, pedidos);
             } else {
@@ -30,7 +30,7 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 
-    private static void manejarCliente(Scanner scanner, UsuariosOperaciones usuariosOperaciones, RestauranteBD restaurantesOperaciones,
+    private static void manejarCliente(Scanner scanner, ControladorCliente controladorCliente, RestauranteBD restaurantesOperaciones,
                                        MenuOperaciones menuOperaciones, Pedidos pedidos) {
         while (true) {
             mostrarMenuPrincipalCliente();
@@ -38,11 +38,11 @@ public class OctoberEatsGestionPrincipal {
 
             switch (subOpcion) {
                 case 1:
-                    registrarUsuario(scanner, usuariosOperaciones);
+                    registrarUsuario(scanner, controladorCliente);
 
                     break;
                 case 2:
-                    autenticarUsuario(scanner, usuariosOperaciones);
+                    autenticarUsuario(scanner, controladorCliente);
                     break;
                 case 3:
                     listarRestaurantes(restaurantesOperaciones);
@@ -145,7 +145,7 @@ public class OctoberEatsGestionPrincipal {
     }
 
 
-    private static void registrarUsuario(Scanner scanner, UsuariosOperaciones usuariosOperaciones) {
+    private static void registrarUsuario(Scanner scanner, ControladorCliente controladorCliente) {
         try {
             System.out.print("Ingrese el nombre de usuario: ");
             String nombreUsuario = scanner.nextLine();
@@ -156,7 +156,7 @@ public class OctoberEatsGestionPrincipal {
             scanner.nextLine();
             System.out.print("Ingrese la contraseña: ");
             String contrasena = scanner.nextLine();
-            if (usuariosOperaciones.registrarUsuario(nombreUsuario, contrasena)) {
+            if (controladorCliente.registrarUsuario(nombreUsuario, contrasena)) {
                 System.out.println("Usuario registrado con éxito.");
             } else {
                 System.out.println("Error al registrar el usuario.");
@@ -166,14 +166,14 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 
-    private static void autenticarUsuario(Scanner scanner, UsuariosOperaciones usuariosOperaciones) {
+    private static void autenticarUsuario(Scanner scanner, ControladorCliente controladorCliente) {
         try {
             System.out.print("Ingrese el nombre de usuario: ");
             String nombreUsuario = scanner.nextLine();
             scanner.nextLine();
             System.out.print("Ingrese la contraseña: ");
             String contrasena = scanner.nextLine();
-            if (usuariosOperaciones.autenticarUsuario(nombreUsuario, contrasena)) {
+            if (controladorCliente.autenticarUsuario(nombreUsuario, contrasena)) {
                 System.out.println("Autenticación exitosa. ¡Bienvenido!");
             } else {
                 System.out.println("Error en la autenticación. Usuario o contraseña incorrectos.");
