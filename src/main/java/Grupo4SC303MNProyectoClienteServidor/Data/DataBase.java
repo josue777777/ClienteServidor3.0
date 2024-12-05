@@ -1,12 +1,10 @@
-package Grupo4SC303MNProyectoClienteServidor;
+package Grupo4SC303MNProyectoClienteServidor.Data;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 // Clase para gestionar la conexión a la base de datos
 public class DataBase {

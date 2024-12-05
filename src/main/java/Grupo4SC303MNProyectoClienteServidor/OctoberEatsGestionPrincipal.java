@@ -1,5 +1,9 @@
 package Grupo4SC303MNProyectoClienteServidor;
 
+import Grupo4SC303MNProyectoClienteServidor.Controller.ControladorCliente;
+import Grupo4SC303MNProyectoClienteServidor.Controller.ControladorRestaurante;
+import Grupo4SC303MNProyectoClienteServidor.Data.DataBase;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,9 +11,7 @@ public class OctoberEatsGestionPrincipal {
     public static void main(String[] args) {
 
         ControladorCliente controladorCliente = new ControladorCliente();
-        RestauranteBD restaurantesOperaciones = new RestauranteBD();
-        MenuOperaciones menuOperaciones = new MenuOperaciones(); // Agrega una instancia de MenuOperaciones
-        Pedidos pedidos = new Pedidos();
+        ControladorRestaurante controladorRestaurante = new ControladorRestaurante();
         Scanner s = new Scanner(System.in);
 
         while (true) {
@@ -21,17 +23,16 @@ public class OctoberEatsGestionPrincipal {
                 System.out.println("Saliendo del sistema. ¡Hasta luego!");
                 break;
             } else if (opcion == 1) {
-                manejarCliente(s, controladorCliente, restaurantesOperaciones, menuOperaciones, pedidos);
+                manejarCliente(s, controladorCliente, controladorRestaurante);
             } else if (opcion == 2) {
-                manejarAdministrador(s, restaurantesOperaciones, pedidos);
+                manejarAdministrador(s, controladorRestaurante);
             } else {
                 System.out.println("Opción no válida. Intente de nuevo.");
             }
         }
     }
 
-    private static void manejarCliente(Scanner scanner, ControladorCliente controladorCliente, RestauranteBD restaurantesOperaciones,
-                                       MenuOperaciones menuOperaciones, Pedidos pedidos) {
+    private static void manejarCliente(Scanner scanner, ControladorCliente controladorCliente, ControladorRestaurante controladorRestaurante) {
         while (true) {
             mostrarMenuPrincipalCliente();
             int subOpcion = scanner.nextInt();
@@ -39,16 +40,15 @@ public class OctoberEatsGestionPrincipal {
             switch (subOpcion) {
                 case 1:
                     registrarUsuario(scanner, controladorCliente);
-
                     break;
                 case 2:
                     autenticarUsuario(scanner, controladorCliente);
                     break;
                 case 3:
-                    listarRestaurantes(restaurantesOperaciones);
+                    listarRestaurantes(controladorRestaurante);
                     break;
                 case 4:
-                    listarMenu(scanner, menuOperaciones);
+//                    listarMenu(scanner, controladorRestaurante);
                     break;
                 case 0:
                     System.out.println("Volviendo al menú inicial...");
@@ -64,7 +64,7 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 
-    private static void manejarAdministrador(Scanner scanner, RestauranteBD restaurantesOperaciones, Pedidos pedidos) {
+    private static void manejarAdministrador(Scanner scanner, ControladorRestaurante controladorRestaurante) {
         while (true) {
             mostrarMenuPrincipalAdministrador();
             int subOpcion = scanner.nextInt();
@@ -78,7 +78,7 @@ public class OctoberEatsGestionPrincipal {
                     // Autenticar administrador
                     break;
                 case 3:
-                    listarPedidos(pedidos);
+                    listarPedidos(controladorRestaurante);
                     break;
                 case 4:
                     // Modificar menú del restaurante
@@ -99,7 +99,7 @@ public class OctoberEatsGestionPrincipal {
 
     private static boolean deseaContinuarEnMenu(Scanner scanner) {
         while (true) {
-            System.out.println("¿Deseas volver al menu? Sí/No (No: Si deseas salir por completo");
+            System.out.println("¿Deseas volver al menu? Sí/No (No: Si deseas salir por completo)");
             String respuesta = scanner.nextLine().trim().toLowerCase();
 
             if (respuesta.equals("sí") || respuesta.equals("si")) {
@@ -183,9 +183,9 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 
-    private static void listarRestaurantes(RestauranteBD restaurantesOperaciones) {
+    private static void listarRestaurantes(ControladorRestaurante controladorRestaurante) {
         try {
-            List<String> restaurantes = restaurantesOperaciones.listarRestaurantesBD();
+            List<String> restaurantes = controladorRestaurante.listarRestaurantesBD();
 
             if (restaurantes.isEmpty()) {
                 System.out.println("\nNo hay restaurantes disponibles.");
@@ -200,25 +200,24 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 
-    private static void listarMenu(Scanner scanner, MenuOperaciones menuOperaciones) { // Cambia el parámetro a MenuOperaciones
-        try {
-            scanner.nextLine();
-            System.out.print("Ingrese el nombre del restaurante para listar su menú: ");
-            String nombreRestaurante = scanner.nextLine();
-            List<String> menu = menuOperaciones.listarMenu(); // metodo menu de opciones
+//    private static void listarMenu(Scanner scanner, ControladorRestaurante controladorRestaurante) {
+//        try {
+//            System.out.print("Ingrese el nombre del restaurante para listar su menú: ");
+//            String nombreRestaurante = scanner.nextLine();
+//            List<String> menu = controladorRestaurante.listarMenu();
+//
+//            System.out.println("\n===== Menú de " + nombreRestaurante + " =====");
+//            for (String item : menu) {
+//                System.out.println(item);
+//            }
+//
+//        } catch (Exception e) {
+//            System.err.println("Ocurrió un error al listar el menú: " + e.getMessage());
+//        }
+//    }
 
-            System.out.println("\n===== Menú de " + nombreRestaurante + " =====");
-            for (String item : menu) {
-                System.out.println(item);
-            }
 
-        } catch (Exception e) {
-            System.err.println("Ocurrió un error al listar el menú: " + e.getMessage());
-        }
-
-    }
-
-    private static void registrarPedido(Scanner scanner, Pedidos pedidos) {
+    private static void registrarPedido(Scanner scanner, ControladorRestaurante pedidos) {
         try {
             DataBase db = DataBase.getInstance();
 
@@ -253,7 +252,7 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 
-    private static void consultarPedido(Scanner scanner, Pedidos pedidos) {
+    private static void consultarPedido(Scanner scanner, ControladorRestaurante pedidos) {
         try {
             System.out.print("Ingrese el ID del pedido: ");
             int pedidoID = scanner.nextInt();
@@ -272,15 +271,15 @@ public class OctoberEatsGestionPrincipal {
 
     }
 
-    private static void listarPedidos(Pedidos pedidos) {
+    private static void listarPedidos(ControladorRestaurante controladorRestaurante) {
         try {
-            List<String> pedidosList = pedidos.listarPedidos();
+            List<String> pedidos = controladorRestaurante.listarPedidos();
 
-            if (pedidosList.isEmpty()) {
-                System.out.println("\nNo hay pedidos registrados.");
+            if (pedidos.isEmpty()) {
+                System.out.println("\nNo hay pedidos pendientes.");
             } else {
-                System.out.println("\n===== Listado de Pedidos =====");
-                for (String pedido : pedidosList) {
+                System.out.println("\n===== Pedidos Pendientes =====");
+                for (String pedido : pedidos) {
                     System.out.println(pedido);
                 }
             }
@@ -289,7 +288,7 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 
-    private static void eliminarPedido(Scanner scanner, Pedidos pedidos) {
+    private static void eliminarPedido(Scanner scanner, ControladorRestaurante pedidos) {
         try{
             System.out.print("Ingrese el ID del pedido a eliminar: ");
             int pedidoID = scanner.nextInt();
@@ -306,7 +305,7 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 
-    private static void actualizarPedido(Scanner scanner, Pedidos pedidos) {
+    private static void actualizarPedido(Scanner scanner, ControladorRestaurante pedidos) {
         try {
             System.out.print("Ingrese el ID del pedido a actualizar: ");
             int pedidoID = scanner.nextInt();
