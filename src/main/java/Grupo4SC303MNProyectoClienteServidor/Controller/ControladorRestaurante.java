@@ -1,6 +1,6 @@
 package Grupo4SC303MNProyectoClienteServidor.Controller;
 
-import Grupo4SC303MNProyectoClienteServidor.Data.DataBase;
+import Grupo4SC303MNProyectoClienteServidor.Utilidades.DataBase;
 import Grupo4SC303MNProyectoClienteServidor.Model.Menu;
 
 import java.sql.Connection;

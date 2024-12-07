@@ -2,7 +2,7 @@ package Grupo4SC303MNProyectoClienteServidor;
 
 import Grupo4SC303MNProyectoClienteServidor.Controller.ControladorCliente;
 import Grupo4SC303MNProyectoClienteServidor.Controller.ControladorRestaurante;
-import Grupo4SC303MNProyectoClienteServidor.Data.DataBase;
+import Grupo4SC303MNProyectoClienteServidor.Utilidades.DataBase;
 
 import java.util.List;
 import java.util.Scanner;
