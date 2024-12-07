@@ -1,7 +1,7 @@
 package Grupo4SC303MNProyectoClienteServidor.Controller;
 
 import Grupo4SC303MNProyectoClienteServidor.Utilidades.DataBase;
-import Grupo4SC303MNProyectoClienteServidor.Model.Menu;
+import Grupo4SC303MNProyectoClienteServidor.Model.Plato;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -142,14 +142,14 @@ public class ControladorRestaurante {
         }
     }
 
-    public List<Menu> listarMenu() {
-        List<Menu> menus = new ArrayList<>();
+    public List<Plato> listarMenu() {
+        List<Plato> menus = new ArrayList<>();
         String query = "SELECT * FROM Menus";
         try (Connection conexion = db.setConexion();
              PreparedStatement statement = conexion.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
-                Menu menu = new Menu(
+                Plato menu = new Plato(
                         resultSet.getInt("ID"),
                         resultSet.getString("Nombre"),
                         resultSet.getString("Descripcion"),

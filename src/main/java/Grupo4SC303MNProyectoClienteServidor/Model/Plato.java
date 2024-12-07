@@ -1,13 +1,13 @@
 package Grupo4SC303MNProyectoClienteServidor.Model;
 
-public class Menu {
+public class Plato {
 
     private int id;
     private String nombre;
     private String descripcion;
     private double precio;
 
-    public Menu(int id, String nombre, String descripcion, double precio) {
+    public Plato(int id, String nombre, String descripcion, double precio) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -48,7 +48,7 @@ public class Menu {
 
     @Override
     public String toString() {
-        return "Menu: " +
+        return "Plato: " +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
                 ", descripcion='" + descripcion + '\'' +

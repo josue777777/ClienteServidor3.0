@@ -9,9 +9,9 @@ public class Restaurante {
     private String direccion;
     private String telefono;
     private String descripcion; // Información adicional sobre el restaurante
-    private Menu[] menu; // Relación con un menú
+    private Plato[] menu; // Relación con un menú
 
-    public Restaurante(int id, String nombre, String direccion, String telefono, String descripcion, Menu[] menu) {
+    public Restaurante(int id, String nombre, String direccion, String telefono, String descripcion, Plato[] menu) {
         this.id = id;
         this.nombre = nombre;
         this.direccion = direccion;
