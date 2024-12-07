@@ -5,8 +5,6 @@ public class Administrador {
     private int id;
     private String nombre;
     private String apellido;
-    private String correo;
-    private String telefono;
     private String contraseña;
     private Restaurante restaurante; // Relación con un restaurante
 
@@ -14,8 +12,6 @@ public class Administrador {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.correo = correo;
-        this.telefono = telefono;
         this.contraseña = contraseña;
         this.restaurante = restaurante;
     }
@@ -44,21 +40,6 @@ public class Administrador {
         this.apellido = apellido;
     }
 
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
 
     public String getContraseña() {
         return contraseña;
@@ -82,8 +63,6 @@ public class Administrador {
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
-                ", correo='" + correo + '\'' +
-                ", telefono='" + telefono + '\'' +
                 ", restaurante=" + restaurante;
     }
 }

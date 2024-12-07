@@ -84,25 +84,73 @@ public class OctoberEatsGestionPrincipal {
         System.out.print("Seleccione una opción: ");
     }
 
-    private static void mostrarMenuAdmin() {
-        System.out.println("\n=== Menú Administrador ===");
-        System.out.println("1. Ver Pedidos");
-        System.out.println("2. Agregar Platillo al Menú");
-        System.out.println("3. Cerrar Sesión");
-        System.out.print("Seleccione una opción: ");
-    }
 
-    private static void registrarUsuario(Scanner scanner, ControladorCliente controladorCliente) {
-        System.out.print("Ingrese el nombre de usuario: ");
-        String nombreUsuario = scanner.nextLine();
-        System.out.print("Ingrese la contraseña: ");
-        String contrasena = scanner.nextLine();
-        if (controladorCliente.registrarUsuario(nombreUsuario, contrasena)) {
-            System.out.println("Usuario registrado con éxito.");
-        } else {
-            System.out.println("Error al registrar el usuario.");
+    private static void mostrarMenuAdmin(Scanner scanner, ControladorCliente controladorCliente) {
+        while (true) {
+            System.out.println("\n=== Menú Administrador ===");
+            System.out.println("1. Ver Pedidos");
+            System.out.println("2. Agregar Platillo al Menú");
+            System.out.println("3. Cerrar Sesión");
+            System.out.print("Seleccione una opción: ");
+
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar el buffer
+
+            switch (opcion) {
+                case 1:
+                    System.out.println("Mostrando pedidos...");
+                    // Implementar lógica para mostrar pedidos
+                    break;
+                case 2:
+                    System.out.println("Agregando platillo...");
+                    // Implementar lógica para agregar platillo
+                    break;
+                case 3:
+                    System.out.println("Cerrando sesión...");
+                    return;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
         }
     }
+
+private static void registrarUsuario(Scanner scanner, ControladorCliente controladorCliente) {
+    System.out.print("Ingrese el nombre de usuario: ");
+    String nombreUsuario = scanner.nextLine();
+    System.out.print("Ingrese la contraseña: ");
+    String contrasena = scanner.nextLine();
+
+    System.out.print("¿Es administrador o cliente? (admin/cliente): ");
+    String rol = scanner.nextLine().toLowerCase();
+
+    if (rol.equals("admin")) {
+        System.out.print("Ingrese el nombre del administrador: ");
+        String nombre = scanner.nextLine();
+        System.out.print("Ingrese el apellido del administrador: ");
+        String apellido = scanner.nextLine();
+        System.out.print("Ingrese el nombre del restaurante: ");
+        String nombreRestaurante = scanner.nextLine();
+        System.out.print("Ingrese la dirección del restaurante: ");
+        String direccionRestaurante = scanner.nextLine();
+        System.out.print("Ingrese el tipo de comida del restaurante: ");
+        String tipoComida = scanner.nextLine();
+
+
+        if (controladorCliente.registrarAdministrador(nombreUsuario, contrasena, nombre, apellido, nombreRestaurante, direccionRestaurante, tipoComida)) {
+            System.out.println("Administrador y restaurante registrados con éxito.");
+        } else {
+            System.out.println("Error al registrar el administrador.");
+        }
+    } else if (rol.equals("cliente")) {
+        if (controladorCliente.registrarUsuario(nombreUsuario, contrasena)) {
+            System.out.println("Cliente registrado con éxito.");
+        } else {
+            System.out.println("Error al registrar el cliente.");
+        }
+    } else {
+        System.out.println("Rol no válido. Por favor, intente de nuevo.");
+    }
+}
 
     private static boolean iniciarSesion(Scanner scanner, ControladorCliente controladorCliente) {
         System.out.print("Ingrese el nombre de usuario: ");
@@ -110,20 +158,20 @@ public class OctoberEatsGestionPrincipal {
         System.out.print("Ingrese la contraseña: ");
         String contrasena = scanner.nextLine();
 
-        // Verifica si el usuario es administrador
         if (controladorCliente.autenticarUsuario(nombreUsuario, contrasena)) {
             if (controladorCliente.esAdministrador(nombreUsuario)) {
-                mostrarMenuAdmin(); // Muestra el menú de administrador
-                return true; // Usuario autenticado como administrador
+                mostrarMenuAdmin(scanner, controladorCliente);
             } else {
-                mostrarMenuCliente(); // Muestra el menú de cliente
-                return true; // Usuario autenticado como cliente
+                mostrarMenuCliente(scanner, controladorCliente, new ControladorRestaurante());
             }
+            return true;
         } else {
             System.out.println("Error en la autenticación. Intente de nuevo.");
-            return false; // Autenticación fallida
+            return false;
         }
     }
+
+
 
     private static void listarRestaurantes(ControladorRestaurante controladorRestaurante) {
         System.out.println("\n=== Restaurantes Disponibles ===");

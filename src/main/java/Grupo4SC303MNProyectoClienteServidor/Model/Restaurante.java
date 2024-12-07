@@ -1,5 +1,7 @@
 package Grupo4SC303MNProyectoClienteServidor.Model;
 
+import java.util.Arrays;
+
 public class Restaurante {
 
     private int id;
@@ -7,13 +9,15 @@ public class Restaurante {
     private String direccion;
     private String telefono;
     private String descripcion; // Información adicional sobre el restaurante
+    private Menu[] menu; // Relación con un menú
 
-    public Restaurante(int id, String nombre, String direccion, String telefono, String descripcion) {
+    public Restaurante(int id, String nombre, String direccion, String telefono, String descripcion, Menu[] menu) {
         this.id = id;
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
         this.descripcion = descripcion;
+        this.menu = menu;
     }
 
     public int getId() {
@@ -63,6 +67,8 @@ public class Restaurante {
                 ", nombre='" + nombre + '\'' +
                 ", direccion='" + direccion + '\'' +
                 ", telefono='" + telefono + '\'' +
-                ", descripcion='" + descripcion + '\'';
+                ", descripcion='" + descripcion + '\'' +
+                ", menu=" + Arrays.toString(menu) +
+                '}';
     }
 }

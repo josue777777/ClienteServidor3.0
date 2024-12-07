@@ -77,5 +77,29 @@ public class DataBase {
         return false;
     }
 
+    public boolean registrarMenu(int restauranteID, String nombre, double precio, String categoria, String descripcion, String urlImagen, int tiempoPreparacion) {
+        // Consulta para insertar el menú
+        String registrarMenuQuery = "INSERT INTO Menus (RestauranteID, Nombre, Precio, Categoria, Descripcion, Disponible, URLImagen, TiempoPreparacion) VALUES (?, ?, ?, ?, ?, TRUE, ?, ?)";
+
+        try (Connection conexion = setConexion();
+             PreparedStatement registrarMenuStmt = conexion.prepareStatement(registrarMenuQuery)) {
+
+            // Establecer los valores para el menú
+            registrarMenuStmt.setInt(1, restauranteID);
+            registrarMenuStmt.setString(2, nombre);
+            registrarMenuStmt.setDouble(3, precio);
+            registrarMenuStmt.setString(4, categoria);
+            registrarMenuStmt.setString(5, descripcion);
+            registrarMenuStmt.setString(6, urlImagen);
+            registrarMenuStmt.setInt(7, tiempoPreparacion);
+
+            return registrarMenuStmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al registrar el menú: " + e.getMessage());
+            return false;
+        }
+    }
+
+
 
 }
