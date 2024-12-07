@@ -42,6 +42,20 @@ public class ControladorCliente {
             return false;
         }
     }
+    public boolean esAdministrador(String nombreUsuario) {
+        String query = "SELECT COUNT(*) FROM Administradores a JOIN Usuarios u ON a.UsuarioID = u.ID WHERE u.NombreUsuario = ?";
+        try (Connection conexion = db.setConexion();
+             PreparedStatement stmt = conexion.prepareStatement(query)) {
+            stmt.setString(1, nombreUsuario);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al verificar si el usuario es administrador: " + e.getMessage());
+        }
+        return false;
+    }
 
 
 }
