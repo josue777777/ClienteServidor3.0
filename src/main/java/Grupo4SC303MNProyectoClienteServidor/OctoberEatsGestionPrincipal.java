@@ -11,7 +11,6 @@ import java.util.Scanner;
 
 public class OctoberEatsGestionPrincipal {
     public static void main(String[] args) {
-
         ControladorCliente controladorCliente = new ControladorCliente();
         ControladorRestaurante controladorRestaurante = new ControladorRestaurante();
         ControladorAdministrador controladorAdministrador = new ControladorAdministrador();
@@ -50,7 +49,6 @@ public class OctoberEatsGestionPrincipal {
         System.out.print("Seleccione una opción: ");
     }
 
-
     private static void mostrarMenuCliente(Scanner scanner, ControladorCliente controladorCliente, ControladorRestaurante controladorRestaurante) {
         while (true) {
             mostrarMenuCliente();
@@ -59,10 +57,13 @@ public class OctoberEatsGestionPrincipal {
 
             switch (opcion) {
                 case 1:
-                    listarRestaurantes(controladorRestaurante);
+                    int restauranteSeleccionado = seleccionarRestaurante(scanner, controladorRestaurante);
+                    if (restauranteSeleccionado != -1) {
+                        verMenuRestaurantePorSeleccion(scanner, restauranteSeleccionado, controladorRestaurante);
+                    }
                     break;
                 case 2:
-                    //verMenuRestaurante(scanner, controladorRestaurante);
+                    verMenuRestaurante(scanner, controladorRestaurante);
                     break;
                 case 3:
                     //realizarPedido(scanner, controladorRestaurante);
@@ -84,7 +85,6 @@ public class OctoberEatsGestionPrincipal {
         System.out.println("4. Cerrar Sesión");
         System.out.print("Seleccione una opción: ");
     }
-
 
     private static void mostrarMenuAdmin(Scanner scanner, ControladorCliente controladorCliente) {
         while (true) {
@@ -115,43 +115,42 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 
-private static void registrarUsuario(Scanner scanner, ControladorCliente controladorCliente) {
-    System.out.print("Ingrese el nombre de usuario: ");
-    String nombreUsuario = scanner.nextLine();
-    System.out.print("Ingrese la contraseña: ");
-    String contrasena = scanner.nextLine();
+    private static void registrarUsuario(Scanner scanner, ControladorCliente controladorCliente) {
+        System.out.print("Ingrese el nombre de usuario: ");
+        String nombreUsuario = scanner.nextLine();
+        System.out.print("Ingrese la contraseña: ");
+        String contrasena = scanner.nextLine();
 
-    System.out.print("¿Es administrador o cliente? (admin/cliente): ");
-    String rol = scanner.nextLine().toLowerCase();
+        System.out.print("¿Es administrador o cliente? (admin/cliente): ");
+        String rol = scanner.nextLine().toLowerCase();
 
-    if (rol.equals("admin")) {
-        System.out.print("Ingrese el nombre del administrador: ");
-        String nombre = scanner.nextLine();
-        System.out.print("Ingrese el apellido del administrador: ");
-        String apellido = scanner.nextLine();
-        System.out.print("Ingrese el nombre del restaurante: ");
-        String nombreRestaurante = scanner.nextLine();
-        System.out.print("Ingrese la dirección del restaurante: ");
-        String direccionRestaurante = scanner.nextLine();
-        System.out.print("Ingrese el tipo de comida del restaurante: ");
-        String tipoComida = scanner.nextLine();
+        if (rol.equals("admin")) {
+            System.out.print("Ingrese el nombre del administrador: ");
+            String nombre = scanner.nextLine();
+            System.out.print("Ingrese el apellido del administrador: ");
+            String apellido = scanner.nextLine();
+            System.out.print("Ingrese el nombre del restaurante: ");
+            String nombreRestaurante = scanner.nextLine();
+            System.out.print("Ingrese la dirección del restaurante: ");
+            String direccionRestaurante = scanner.nextLine();
+            System.out.print("Ingrese el tipo de comida del restaurante: ");
+            String tipoComida = scanner.nextLine();
 
-
-        if (controladorCliente.registrarAdministrador(nombreUsuario, contrasena, nombre, apellido, nombreRestaurante, direccionRestaurante, tipoComida)) {
-            System.out.println("Administrador y restaurante registrados con éxito.");
+            if (controladorCliente.registrarAdministrador(nombreUsuario, contrasena, nombre, apellido, nombreRestaurante, direccionRestaurante, tipoComida)) {
+                System.out.println("Administrador y restaurante registrados con éxito.");
+            } else {
+                System.out.println("Error al registrar el administrador.");
+            }
+        } else if (rol.equals("cliente")) {
+            if (controladorCliente.registrarUsuario(nombreUsuario, contrasena)) {
+                System.out.println("Cliente registrado con éxito.");
+            } else {
+                System.out.println("Error al registrar el cliente.");
+            }
         } else {
-            System.out.println("Error al registrar el administrador.");
+            System.out.println("Rol no válido. Por favor, intente de nuevo.");
         }
-    } else if (rol.equals("cliente")) {
-        if (controladorCliente.registrarUsuario(nombreUsuario, contrasena)) {
-            System.out.println("Cliente registrado con éxito.");
-        } else {
-            System.out.println("Error al registrar el cliente.");
-        }
-    } else {
-        System.out.println("Rol no válido. Por favor, intente de nuevo.");
     }
-}
 
     private static boolean iniciarSesion(Scanner scanner, ControladorCliente controladorCliente) {
         System.out.print("Ingrese el nombre de usuario: ");
@@ -172,38 +171,98 @@ private static void registrarUsuario(Scanner scanner, ControladorCliente control
         }
     }
 
-
-
     private static void listarRestaurantes(ControladorRestaurante controladorRestaurante) {
         System.out.println("\n=== Restaurantes Disponibles ===");
         controladorRestaurante.listarRestaurantesBD().forEach(System.out::println);
     }
 
+    private static int seleccionarRestaurante(Scanner scanner, ControladorRestaurante controladorRestaurante) {
+        System.out.println("\n=== Restaurantes Disponibles ===");
+        List<String> restaurantes = controladorRestaurante.listarRestaurantesBD();
+
+        if (restaurantes.isEmpty()) {
+            System.out.println("No hay restaurantes disponibles en este momento.");
+            return -1;
+        }
+
+        for (int i = 0; i < restaurantes.size(); i++) {
+            System.out.println((i + 1) + ". " + restaurantes.get(i));
+        }
+
+        System.out.print("Seleccione el número del restaurante que desea ver: ");
+        int seleccion = scanner.nextInt();
+        scanner.nextLine(); // Limpiar el buffer
+
+        if (seleccion > 0 && seleccion <= restaurantes.size()) {
+            System.out.println("Ha seleccionado el restaurante: " + restaurantes.get(seleccion - 1));
+            return seleccion; // Retornar índice seleccionado (puedes mapear esto a un ID si es necesario)
+        } else {
+            System.out.println("Selección no válida. Intente de nuevo.");
+            return -1;
+        }
+    }
+
+    private static void verMenuRestaurantePorSeleccion(Scanner scanner, int restauranteSeleccionado, ControladorRestaurante controladorRestaurante) {
+        List<String> menu = controladorRestaurante.listarMenuPorId(restauranteSeleccionado);
+
+        if (menu.isEmpty()) {
+            System.out.println("No se encontró un menú para el restaurante seleccionado o el restaurante no existe.");
+        } else {
+            System.out.print("¿Desea ver el menú de este restaurante? (Sí/No): ");
+            String respuesta = scanner.nextLine().trim().toLowerCase();
+
+            if (respuesta.equals("sí") || respuesta.equals("si")) {
+                System.out.println("\n=== Menú del Restaurante ===");
+                menu.forEach(System.out::println);
+            } else {
+                System.out.println("No se mostrará el menú.");
+            }
+        }
+    }
     private static void verMenuRestaurante(Scanner scanner, ControladorRestaurante controladorRestaurante) {
         System.out.print("Ingrese el ID del restaurante: ");
-        int restauranteID = scanner.nextInt();
-        scanner.nextLine(); // Limpiar el buffer de entrada
+        int restauranteId = scanner.nextInt();
+        scanner.nextLine(); // Consumir la línea restante después del número
 
-        //controladorRestaurante.mostrarMenuRestaurante(restauranteID);
+        List<String> menu = controladorRestaurante.listarMenuPorId(restauranteId);
+
+        if (menu.isEmpty()) {
+            System.out.println("No se encontró un menú para el restaurante especificado o el restaurante no existe.");
+        } else {
+            System.out.println("\n=== Menú del Restaurante ===");
+            menu.forEach(System.out::println);
+        }
     }
 
     private static void realizarPedido(Scanner scanner, ControladorRestaurante controladorRestaurante) {
+        System.out.println("\n=== Realizar Pedido ===");
         System.out.print("Ingrese el ID del restaurante: ");
-        int restauranteID = scanner.nextInt();
+        int restauranteId = scanner.nextInt();
         scanner.nextLine(); // Limpiar el buffer de entrada
 
-        System.out.print("Ingrese el ID del platillo: ");
-        int platilloID = scanner.nextInt();
+        List<String> menu = controladorRestaurante.listarMenuPorId(restauranteId);
+        if (menu.isEmpty()) {
+            System.out.println("No se encontró un menú para el restaurante especificado o el restaurante no existe.");
+            return;
+        }
+
+        System.out.println("Menú disponible:");
+        for (int i = 0; i < menu.size(); i++) {
+            System.out.println((i + 1) + ". " + menu.get(i));
+        }
+
+        System.out.print("Seleccione el número del platillo que desea pedir: ");
+        int seleccion = scanner.nextInt();
         scanner.nextLine(); // Limpiar el buffer de entrada
 
-        System.out.print("Ingrese la cantidad: ");
-        int cantidad = scanner.nextInt();
-        scanner.nextLine(); // Limpiar el buffer de entrada
-
-        //controladorRestaurante.realizarPedido(restauranteID, platilloID, cantidad);
-        System.out.println("Pedido realizado con éxito.");
+        if (seleccion > 0 && seleccion <= menu.size()) {
+            System.out.println("Pedido realizado: " + menu.get(seleccion - 1));
+        } else {
+            System.out.println("Selección no válida. Pedido no realizado.");
+        }
     }
 }
+
 
 
 

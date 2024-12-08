@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ControladorRestaurante {
     private final DataBase db;
@@ -142,25 +143,32 @@ public class ControladorRestaurante {
         }
     }
 
-    public List<Plato> listarMenu() {
-        List<Plato> menus = new ArrayList<>();
-        String query = "SELECT * FROM Menus";
+    public List<String> listarMenuPorId(int restauranteId) {
+        List<String> menu = new ArrayList<>();
+        String query = "SELECT m.ID, m.Nombre, m.Precio, m.Categoria, m.Descripcion, m.Disponible " +
+                "FROM Menus m " +
+                "WHERE m.RestauranteID = ? AND m.Disponible = TRUE";
+
         try (Connection conexion = db.setConexion();
-             PreparedStatement statement = conexion.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                Plato menu = new Plato(
-                        resultSet.getInt("ID"),
-                        resultSet.getString("Nombre"),
-                        resultSet.getString("Descripcion"),
-                        resultSet.getDouble("Precio")
-                );
-                menus.add(menu);
+             PreparedStatement statement = conexion.prepareStatement(query)) {
+            statement.setInt(1, restauranteId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String platillo = String.format("%s - %s - %.2f - %s",
+                            resultSet.getString("Nombre"),
+                            resultSet.getString("Categoria"),
+                            resultSet.getDouble("Precio"),
+                            resultSet.getString("Descripcion"));
+                    menu.add(platillo);
+                }
             }
         } catch (SQLException e) {
             System.err.println("Error al listar el menú: " + e.getMessage());
         }
-        return menus;
+
+        return menu;
     }
+
 
 }
