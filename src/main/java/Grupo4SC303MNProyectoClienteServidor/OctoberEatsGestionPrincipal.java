@@ -66,7 +66,7 @@ public class OctoberEatsGestionPrincipal {
                     verMenuRestaurante(scanner, controladorRestaurante);
                     break;
                 case 3:
-                    //realizarPedido(scanner, controladorRestaurante);
+                    realizarPedido(scanner, controladorRestaurante);
                     break;
                 case 4:
                     System.out.println("Cerrando sesión...");
@@ -247,16 +247,26 @@ public class OctoberEatsGestionPrincipal {
         }
 
         System.out.println("Menú disponible:");
-        for (int i = 0; i < menu.size(); i++) {
-            System.out.println((i + 1) + ". " + menu.get(i));
+        for (String item : menu) {
+            System.out.println(item);
         }
 
-        System.out.print("Seleccione el número del platillo que desea pedir: ");
-        int seleccion = scanner.nextInt();
+        System.out.print("Seleccione el ID del platillo que desea pedir: ");
+        int idPlatillo = scanner.nextInt();
         scanner.nextLine(); // Limpiar el buffer de entrada
 
-        if (seleccion > 0 && seleccion <= menu.size()) {
-            System.out.println("Pedido realizado: " + menu.get(seleccion - 1));
+        // Verificar si el ID de platillo existe en el menú (implementar la lógica correspondiente)
+        boolean encontrado = false;
+        for (String item : menu) {
+            if (item.startsWith(String.valueOf(idPlatillo))) {
+                encontrado = true;
+                break;
+            }
+        }
+
+        if (encontrado) {
+            System.out.println("Pedido realizado: Platillo ID " + idPlatillo);
+            // Aquí puedes agregar la lógica para registrar el pedido en la base de datos
         } else {
             System.out.println("Selección no válida. Pedido no realizado.");
         }
