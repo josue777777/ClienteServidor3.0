@@ -13,38 +13,44 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class OctoberEatsServer {
-    private static final int PORT = 5432;
+    private static final int PUERTO = 5432;
 
     public static void main(String[] args) {
         // Iniciar el servidor en un hilo separado
         new Thread(() -> {
-            try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            try (ServerSocket serverSocket = new ServerSocket(PUERTO)) {
                 System.out.println("Servidor iniciado. Esperando conexiones...");
 
                 while (true) {
-                    Socket clientSocket = serverSocket.accept();
+                    Socket socketCliente = serverSocket.accept();
                     System.out.println("Cliente conectado!");
 
-                    // Crear un nuevo hilo para manejar a cada cliente
-                    new Thread(new ManejoClientes(clientSocket)).start();
+                    // Crear un hilo para manejar a cada cliente
+                    new Thread(new ManejoCliente(socketCliente)).start();
                 }
             } catch (IOException e) {
                 System.err.println("Error al escuchar en el puerto: " + e.getMessage());
             }
         }).start();
 
-        // Iniciar el cliente en la misma aplicación para pruebas
+
+
+
+
+
+
+        //inicia la logica de cliente
         try {
             Thread.sleep(1000); // Dar tiempo para que el servidor se inicie
 
-            Socket clientSocket = new Socket("localhost", PORT);
-            DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-            DataInputStream in = new DataInputStream(clientSocket.getInputStream());
+            Socket socketCliente = new Socket("localhost", PUERTO);
+            DataOutputStream salida = new DataOutputStream(socketCliente.getOutputStream());
+            DataInputStream entrada = new DataInputStream(socketCliente.getInputStream());
             Scanner scanner = new Scanner(System.in);
 
             // Interacción con el cliente
-            boolean isRunning = true;
-            while (isRunning) {
+            boolean ejecucionCliente = true;
+            while (ejecucionCliente) {
                 System.out.println("\n=== Menú Cliente ===");
                 System.out.println("1. Registrarse");
                 System.out.println("2. Iniciar sesión");
@@ -54,8 +60,8 @@ public class OctoberEatsServer {
                 scanner.nextLine(); // Limpiar el buffer
 
                 // Enviar la opción al servidor
-                out.writeInt(opcion);
-                out.flush();
+                salida.writeInt(opcion);
+                salida.flush();
 
                 if (opcion == 1 || opcion == 2) {
                     // Solicitar información al cliente según la opción elegida
@@ -65,34 +71,34 @@ public class OctoberEatsServer {
                     String contrasena = scanner.nextLine();
 
                     // Enviar la información al servidor
-                    out.writeUTF(nombreUsuario);
-                    out.writeUTF(contrasena);
-                    out.flush();
+                    salida.writeUTF(nombreUsuario);
+                    salida.writeUTF(contrasena);
+                    salida.flush();
 
                     // Recibir respuesta del servidor
-                    String respuesta = in.readUTF();
+                    String respuesta = entrada.readUTF();
                     System.out.println("Servidor: " + respuesta);
                 } else if (opcion == 3) {
-                    isRunning = false;
+                    ejecucionCliente = false;
                     System.out.println("Saliendo...");
                 } else {
                     System.out.println("Opción no válida.");
                 }
             }
 
-            clientSocket.close();
+            socketCliente.close();
         } catch (IOException | InterruptedException e) {
             System.err.println("Error en el cliente: " + e.getMessage());
         }
     }
 
-    static class ManejoClientes implements Runnable {
-        private Socket clientSocket;
-        private DataOutputStream out;
-        private DataInputStream in;
+    static class ManejoCliente implements Runnable {
+        private Socket socketCliente;
+        private DataOutputStream salida;
+        private DataInputStream entrada;
 
-        public ManejoClientes(Socket socket) {
-            this.clientSocket = socket;
+        public ManejoCliente(Socket socket) {
+            this.socketCliente = socket;
         }
 
         @Override
@@ -102,24 +108,24 @@ public class OctoberEatsServer {
             ControladorRestaurante controladorRestaurante = new ControladorRestaurante();
             ControladorAdministrador controladorAdministrador = new ControladorAdministrador();
 
-            try (DataInputStream in = new DataInputStream(clientSocket.getInputStream());
-                 DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream())) {
+            try (DataInputStream entrada = new DataInputStream(socketCliente.getInputStream());
+                 DataOutputStream salida = new DataOutputStream(socketCliente.getOutputStream())) {
 
-                boolean isRunning = true;
+                boolean ejecucionServidor = true;
 
-                while (isRunning) {
+                while (ejecucionServidor) {
                     // Leer la opción enviada por el cliente
-                    int opcion = in.readInt();
+                    int opcion = entrada.readInt();
                     System.out.println("Opción recibida: " + opcion);
 
                     String respuesta;
                     switch (opcion) {
-                        case 1: // Registrar usuario
-                            registrarUsuario(in, controladorCliente);
+                        case 1: // Registrarse
+                            registrarUsuario(entrada, controladorCliente);
                             respuesta = "Usuario registrado correctamente.";
                             break;
                         case 2: // Iniciar sesión
-                            if (iniciarSesion(in, controladorCliente, out)) {
+                            if (iniciarSesion(entrada, controladorCliente, salida)) {
                                 respuesta = "Inicio de sesión exitoso.";
                             } else {
                                 respuesta = "Error en la autenticación.";
@@ -127,31 +133,31 @@ public class OctoberEatsServer {
                             break;
                         case 3: // Salir
                             respuesta = "¡Hasta luego!";
-                            isRunning = false;
+                            ejecucionServidor = false;
                             break;
                         default:
                             respuesta = "Opción no válida.";
                     }
 
                     // Enviar la respuesta al cliente
-                    out.writeUTF(respuesta);
-                    out.flush();
+                    salida.writeUTF(respuesta);
+                    salida.flush();
                 }
             } catch (IOException e) {
                 System.err.println("Error al procesar la solicitud del cliente: " + e.getMessage());
             } finally {
                 try {
-                    clientSocket.close();
+                    socketCliente.close();
                 } catch (IOException e) {
                     System.err.println("Error al cerrar el socket del cliente: " + e.getMessage());
                 }
             }
         }
 
-        private void registrarUsuario(DataInputStream in, ControladorCliente controladorCliente) throws IOException {
+        private void registrarUsuario(DataInputStream entrada, ControladorCliente controladorCliente) throws IOException {
             try {
-                String nombreUsuario = in.readUTF();
-                String contrasena = in.readUTF();
+                String nombreUsuario = entrada.readUTF();
+                String contrasena = entrada.readUTF();
 
                 System.out.print("¿Es administrador o cliente? (admin/cliente): ");
                 Scanner scanner = new Scanner(System.in);
@@ -188,16 +194,16 @@ public class OctoberEatsServer {
             }
         }
 
-        private boolean iniciarSesion(DataInputStream in, ControladorCliente controladorCliente, DataOutputStream out) throws IOException {
+        private boolean iniciarSesion(DataInputStream entrada, ControladorCliente controladorCliente, DataOutputStream salida) throws IOException {
             try {
-                String nombreUsuario = in.readUTF();
-                String contrasena = in.readUTF();
+                String nombreUsuario = entrada.readUTF();
+                String contrasena = entrada.readUTF();
 
                 if (controladorCliente.autenticarUsuario(nombreUsuario, contrasena)) {
                     if (controladorCliente.esAdministrador(nombreUsuario)) {
-                        out.writeUTF("Bienvenido, administrador.");
+                        salida.writeUTF("Bienvenido, administrador.");
                     } else {
-                        out.writeUTF("Bienvenido, cliente.");
+                        salida.writeUTF("Bienvenido, cliente.");
                     }
                     return true;
                 } else {

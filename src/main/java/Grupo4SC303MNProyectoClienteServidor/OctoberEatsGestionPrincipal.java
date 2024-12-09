@@ -6,6 +6,7 @@ import Grupo4SC303MNProyectoClienteServidor.Controller.ControladorRestaurante;
 
 import Grupo4SC303MNProyectoClienteServidor.Model.Pedido;
 import Grupo4SC303MNProyectoClienteServidor.Utilidades.DataBase;
+import com.google.gson.Gson;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -266,8 +267,10 @@ public class OctoberEatsGestionPrincipal {
         LocalDateTime fechaHoraPedido = LocalDateTime.now();
         String estado = "Pendiente";
 
-        // Asumiendo que Pedido tiene un constructor adecuado
+
         Pedido pedido = new Pedido(productoID, fechaHoraPedido, estado , cantidad);
+
+
 
         // Imprimir mensaje de confirmación (esto se puede personalizar)
         System.out.println("Pedido realizado con éxito:");
