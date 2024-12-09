@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ControladorRestaurante {
     private final DataBase db;
@@ -143,6 +142,53 @@ public class ControladorRestaurante {
         }
     }
 
+    public boolean registrarPedidoDetalle(int pedidoID, int productoID, int cantidad) {
+        String query = "INSERT INTO PedidoDetalles (PedidoID, ProductoID, Cantidad) VALUES (?, ?, ?)";
+        try (Connection conexion = db.setConexion()) {
+            PreparedStatement statement = conexion.prepareStatement(query);
+            statement.setInt(1, pedidoID);
+            statement.setInt(2, productoID);
+            statement.setInt(3, cantidad);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al registrar el detalle del pedido: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    private boolean registrarDetallePedido(int pedidoID, int menuID, int cantidad) {
+        String query = "SELECT Precio FROM Menus WHERE ID = ?";
+        try (Connection conexion = db.setConexion();
+             PreparedStatement statement = conexion.prepareStatement(query)) {
+
+            statement.setInt(1, menuID);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                double precioUnitario = resultSet.getDouble("Precio");
+                double subtotal = precioUnitario * cantidad;
+
+                // Inserta el detalle del pedido
+                String insertQuery = "INSERT INTO DetallePedido (PedidoID, MenuID, Cantidad, Subtotal) VALUES (?, ?, ?, ?)";
+                try (PreparedStatement insertStatement = conexion.prepareStatement(insertQuery)) {
+                    insertStatement.setInt(1, pedidoID);
+                    insertStatement.setInt(2, menuID);
+                    insertStatement.setInt(3, cantidad);
+                    insertStatement.setDouble(4, subtotal);
+                    return insertStatement.executeUpdate() > 0;
+                }
+            } else {
+                System.err.println("MenuID " + menuID + " no encontrado.");
+                return false;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al registrar el detalle del pedido: " + e.getMessage());
+            return false;
+        }
+    }
+
+
     public List<String> listarMenuPorId(int restauranteId) {
         List<String> menu = new ArrayList<>();
         String query = "SELECT m.ID, m.Nombre, m.Precio, m.Categoria, m.Descripcion, m.Disponible " +
@@ -155,7 +201,8 @@ public class ControladorRestaurante {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    String platillo = String.format("%s - %s - %.2f - %s",
+                    String platillo = String.format("ID: %d - %s - %s - %.2f - %s",
+                            resultSet.getInt("ID"),
                             resultSet.getString("Nombre"),
                             resultSet.getString("Categoria"),
                             resultSet.getDouble("Precio"),
@@ -169,6 +216,4 @@ public class ControladorRestaurante {
 
         return menu;
     }
-
-
 }

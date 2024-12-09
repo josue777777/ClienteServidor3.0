@@ -4,8 +4,10 @@ import Grupo4SC303MNProyectoClienteServidor.Controller.ControladorAdministrador;
 import Grupo4SC303MNProyectoClienteServidor.Controller.ControladorCliente;
 import Grupo4SC303MNProyectoClienteServidor.Controller.ControladorRestaurante;
 
+import Grupo4SC303MNProyectoClienteServidor.Model.Pedido;
 import Grupo4SC303MNProyectoClienteServidor.Utilidades.DataBase;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
@@ -219,6 +221,7 @@ public class OctoberEatsGestionPrincipal {
             }
         }
     }
+
     private static void verMenuRestaurante(Scanner scanner, ControladorRestaurante controladorRestaurante) {
         System.out.print("Ingrese el ID del restaurante: ");
         int restauranteId = scanner.nextInt();
@@ -234,42 +237,46 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 
+
     private static void realizarPedido(Scanner scanner, ControladorRestaurante controladorRestaurante) {
-        System.out.println("\n=== Realizar Pedido ===");
-        System.out.print("Ingrese el ID del restaurante: ");
-        int restauranteId = scanner.nextInt();
+        System.out.print("Ingrese el ID del restaurante para ver su menú: ");
+        int restauranteID = scanner.nextInt();
         scanner.nextLine(); // Limpiar el buffer de entrada
 
-        List<String> menu = controladorRestaurante.listarMenuPorId(restauranteId);
+        List<String> menu = controladorRestaurante.listarMenuPorId(restauranteID);
         if (menu.isEmpty()) {
-            System.out.println("No se encontró un menú para el restaurante especificado o el restaurante no existe.");
+            System.out.println("No hay productos disponibles en el menú.");
             return;
         }
 
-        System.out.println("Menú disponible:");
-        for (String item : menu) {
-            System.out.println(item);
+        System.out.println("Menú del restaurante:");
+        for (int i = 0; i < menu.size(); i++) {
+            System.out.println((i + 1) + ". " + menu.get(i)); // Muestra el menú con un índice
         }
 
-        System.out.print("Seleccione el ID del platillo que desea pedir: ");
-        int idPlatillo = scanner.nextInt();
+        System.out.print("Ingrese el número del producto que desea comprar: ");
+        int productoID = scanner.nextInt(); // Número del producto
+        scanner.nextLine(); // Limpiar el buffer // de entrada
+
+        System.out.print("Ingrese la cantidad que desea comprar: ");
+        String cantidad = scanner.next(); //
         scanner.nextLine(); // Limpiar el buffer de entrada
 
-        // Verificar si el ID de platillo existe en el menú (implementar la lógica correspondiente)
-        boolean encontrado = false;
-        for (String item : menu) {
-            if (item.startsWith(String.valueOf(idPlatillo))) {
-                encontrado = true;
-                break;
-            }
-        }
+        // Obtener la fecha y hora actual
+        LocalDateTime fechaHoraPedido = LocalDateTime.now();
+        String estado = "Pendiente";
 
-        if (encontrado) {
-            System.out.println("Pedido realizado: Platillo ID " + idPlatillo);
-            // Aquí puedes agregar la lógica para registrar el pedido en la base de datos
-        } else {
-            System.out.println("Selección no válida. Pedido no realizado.");
-        }
+        // Asumiendo que Pedido tiene un constructor adecuado
+        Pedido pedido = new Pedido(productoID, fechaHoraPedido, estado , cantidad);
+
+        // Imprimir mensaje de confirmación (esto se puede personalizar)
+        System.out.println("Pedido realizado con éxito:");
+
+        System.out.println("Producto ID: " + productoID);
+
+        System.out.println("Fecha y hora: " + fechaHoraPedido);
+        System.out.println("Estado: " + estado);
+        System.out.println("Cantidad: " + cantidad);
     }
 }
 

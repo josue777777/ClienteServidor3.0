@@ -1,6 +1,6 @@
 package Grupo4SC303MNProyectoClienteServidor.Model;
 import java.time.LocalDateTime;
-import java.util.List;
+
 public class Pedido {
 
     private int id; // ID del pedido
@@ -15,6 +15,12 @@ public class Pedido {
         this.id = id;
         this.clienteId = clienteId;
         this.restauranteId = restauranteId;
+        this.fecha = fecha;
+        this.estado = estado;
+        this.detalles = detalles;
+    }
+    public  Pedido(int productoId, LocalDateTime fecha, String estado , String detalles){
+        this.clienteId = productoId;
         this.fecha = fecha;
         this.estado = estado;
         this.detalles = detalles;
