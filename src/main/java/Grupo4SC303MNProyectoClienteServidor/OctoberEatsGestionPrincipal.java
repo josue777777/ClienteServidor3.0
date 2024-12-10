@@ -118,6 +118,8 @@ public class OctoberEatsGestionPrincipal {
         }
     }
 
+
+
     private static void registrarUsuario(Scanner scanner, ControladorCliente controladorCliente) {
         System.out.print("Ingrese el nombre de usuario: ");
         String nombreUsuario = scanner.nextLine();
@@ -267,12 +269,8 @@ public class OctoberEatsGestionPrincipal {
         LocalDateTime fechaHoraPedido = LocalDateTime.now();
         String estado = "Pendiente";
 
-
         Pedido pedido = new Pedido(productoID, fechaHoraPedido, estado , cantidad);
 
-
-
-        // Imprimir mensaje de confirmación (esto se puede personalizar)
         System.out.println("Pedido realizado con éxito:");
 
         System.out.println("Producto ID: " + productoID);
@@ -281,6 +279,9 @@ public class OctoberEatsGestionPrincipal {
         System.out.println("Estado: " + estado);
         System.out.println("Cantidad: " + cantidad);
     }
+
+
+
 }
 
 
