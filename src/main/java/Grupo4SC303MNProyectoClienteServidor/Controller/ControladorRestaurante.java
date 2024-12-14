@@ -191,9 +191,9 @@ public class ControladorRestaurante {
 
     public List<String> listarMenuPorId(int restauranteId) {
         List<String> menu = new ArrayList<>();
-        String query = "SELECT m.ID, m.Nombre, m.Precio, m.Categoria, m.Descripcion, m.Disponible " +
+        String query = "SELECT m.ID, m.Nombre, m.Precio, m.Tipo AS Categoria, m.Descripcion " +
                 "FROM Menus m " +
-                "WHERE m.RestauranteID = ? AND m.Disponible = TRUE";
+                "WHERE m.RestauranteID = ?";
 
         try (Connection conexion = db.setConexion();
              PreparedStatement statement = conexion.prepareStatement(query)) {
@@ -215,5 +215,6 @@ public class ControladorRestaurante {
         }
 
         return menu;
+
     }
 }
