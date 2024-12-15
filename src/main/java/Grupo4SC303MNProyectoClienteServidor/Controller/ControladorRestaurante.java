@@ -17,6 +17,10 @@ public class ControladorRestaurante {
         db = DataBase.getInstance();
     }
 
+
+
+
+
     // Métodos relacionados con pedidos
     public boolean registrarPedidos(int clienteID, int restauranteID) {
         String query = "INSERT INTO Pedidos (ClienteID, RestauranteID) VALUES (?, ?)";

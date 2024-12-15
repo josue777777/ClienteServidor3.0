@@ -1,5 +1,7 @@
 package Grupo4SC303MNProyectoClienteServidor.Model;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 public class Pedido {
 
@@ -10,14 +12,16 @@ public class Pedido {
     private String estado; // Estado del pedido
     private  String detalles; // Lista de detalles del pedido
 
+    // contador pedido id
+    private static int nextId = 1;
     // Constructor
-    public Pedido(int id, int clienteId, int restauranteId, LocalDateTime fecha, String estado, String detalles) {
-        this.id = id;
+    public Pedido( int clienteId, int restauranteId, List<String> detalles) {
+        this.id = nextId++;
         this.clienteId = clienteId;
         this.restauranteId = restauranteId;
-        this.fecha = fecha;
-        this.estado = estado;
-        this.detalles = detalles;
+
+        this.fecha = LocalDateTime.now(); // Fecha actual en el momento de la creación del pedido
+        this.estado = "Pendiente"; // Estado inicial del pedido
     }
     public  Pedido(int productoId, LocalDateTime fecha, String estado , String detalles){
         this.clienteId = productoId;

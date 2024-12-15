@@ -4,16 +4,23 @@ import Grupo4SC303MNProyectoClienteServidor.Controller.ControladorAdministrador;
 import Grupo4SC303MNProyectoClienteServidor.Controller.ControladorCliente;
 import Grupo4SC303MNProyectoClienteServidor.Controller.ControladorRestaurante;
 
+import Grupo4SC303MNProyectoClienteServidor.Model.Cliente;
 import Grupo4SC303MNProyectoClienteServidor.Model.Pedido;
-import Grupo4SC303MNProyectoClienteServidor.Utilidades.DataBase;
-import com.google.gson.Gson;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class OctoberEatsGestionPrincipal {
+
+    // contador id cliente por cada pedido
+    int idClientePedido = 1;
+
     public static void main(String[] args) {
+
+
         ControladorCliente controladorCliente = new ControladorCliente();
         ControladorRestaurante controladorRestaurante = new ControladorRestaurante();
         ControladorAdministrador controladorAdministrador = new ControladorAdministrador();
@@ -278,6 +285,9 @@ public class OctoberEatsGestionPrincipal {
 
 
     private static void realizarPedido(Scanner scanner, ControladorRestaurante controladorRestaurante) {
+
+        List<String> detallesDelPedido = new ArrayList<String>();
+
         System.out.print("Ingrese el ID del restaurante para ver su menú: ");
         int restauranteID = scanner.nextInt();
         scanner.nextLine();
@@ -294,24 +304,46 @@ public class OctoberEatsGestionPrincipal {
         }
 
         System.out.print("Ingrese el número del producto que desea comprar: ");
-        int productoID = scanner.nextInt();
+        int productoSeleccionado = scanner.nextInt();
+        scanner.nextLine();
+
+        // Ingrese su numero de cedula
+        System.out.print("Ingrese su número de cédula: ");
+        int clienteId = scanner.nextInt();
         scanner.nextLine();
 
         System.out.print("Ingrese la cantidad que desea comprar: ");
         String cantidad = scanner.next(); //
         scanner.nextLine();
-        LocalDateTime fechaHoraPedido = LocalDateTime.now();
-        String estado = "Pendiente";
+        detallesDelPedido.add(cantidad + "(Cantidad que solicita el Cliente:");
 
-        Pedido pedido = new Pedido(productoID, fechaHoraPedido, estado , cantidad);
 
-        System.out.println("Pedido realizado con éxito:");
+        // Ingrese los detalles del pedido
+        System.out.println("Ingrese los detalles del pedido (Ej: Agregar 2 cebollas al plato principal): ");
+        String detalle = scanner.nextLine();
+        detallesDelPedido.add(detalle);
 
-        System.out.println("Producto ID: " + productoID);
 
-        System.out.println("Fecha y hora: " + fechaHoraPedido);
-        System.out.println("Estado: " + estado);
-        System.out.println("Cantidad: " + cantidad);
+        if(productoSeleccionado > 0 && productoSeleccionado <= menu.size()) {
+            System.out.println("Producto seleccionado: " + menu.get(productoSeleccionado - 1));
+            System.out.println("Precio del producto: $" + controladorRestaurante.listarMenuPorId(restauranteID).get(productoSeleccionado - 1).split("-")[1]);
+
+            System.out.print("¿Desea confirmar el pedido? (Sí/No): ");
+            String respuesta = scanner.nextLine().trim().toLowerCase();
+
+            if (respuesta.equals("sí") || respuesta.equals("si")) {
+                System.out.println("Procesando pedido...");
+                Pedido pedido = new Pedido( clienteId,restauranteID, detallesDelPedido);
+                if (controladorRestaurante.registrarPedidos(clienteId, restauranteID)) {
+                System.out.println("Pedido registrado con éxito.");
+            } else {
+                System.out.println("Pedido cancelado.");
+            }
+        }
+
+
+
+        }
     }
 
     private static void registrarPedido(Scanner scanner, ControladorRestaurante controladorRestaurante) {
